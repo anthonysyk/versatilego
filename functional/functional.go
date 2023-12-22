@@ -1,0 +1,42 @@
+package functional
+
+func Identity[T any](x T) T {
+	return x
+}
+
+type MapFunc[T, R any] func(T) R
+
+// Map applies a map function to a slice.
+func Map[T any, F any](data []T, getter MapFunc[T, F]) []F {
+	var res []F
+	for _, e := range data {
+		res = append(res, getter(e))
+	}
+	return res
+}
+
+// FilterFunc pe of the filter function.
+type FilterFunc[T any] func(T) bool
+
+// Filter applies a filter function to a slice.
+func Filter[T any](data []T, filterFunc FilterFunc[T]) []T {
+	var result []T
+	for _, e := range data {
+		if filterFunc(e) {
+			result = append(result, e)
+		}
+	}
+	return result
+}
+
+// ReduceFunc is the type of the reduce function.
+type ReduceFunc[T any, R any] func(R, T) R
+
+// Reduce applies a reduce function on a slice.
+func Reduce[T any, R any](data []T, reducer ReduceFunc[T, R], initial R) R {
+	result := initial
+	for _, e := range data {
+		result = reducer(result, e)
+	}
+	return result
+}
