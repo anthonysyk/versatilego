@@ -92,3 +92,52 @@ func TestFilter(t *testing.T) {
 		t.Errorf("Filter() for non-empty strings returned %v, want %v", nonEmpty, wantNonEmpty)
 	}
 }
+
+type person struct {
+	Name string
+	Age  int
+}
+
+func TestFind(t *testing.T) {
+	people := []person{
+		{Name: "Alice", Age: 25},
+		{Name: "Bob", Age: 30},
+		{Name: "Charlie", Age: 22},
+	}
+
+	result, found := Find(people, func(person person) bool {
+		return person.Name == "Charlie"
+	})
+	if !found || result.Name != "Charlie" {
+		t.Error("Expected to find Charlie in the slice, but it wasn't found.")
+	}
+
+	result, found = Find(people, func(person person) bool {
+		return person.Name == "David"
+	})
+	if found {
+		t.Error("Expected not to find David in the slice, but it was found.")
+	}
+}
+
+func TestExists(t *testing.T) {
+	people := []person{
+		{Name: "Alice", Age: 25},
+		{Name: "Bob", Age: 30},
+		{Name: "Charlie", Age: 22},
+	}
+
+	exists := Exists(people, func(person person) bool {
+		return person.Name == "Bob"
+	})
+	if !exists {
+		t.Error("Expected Bob to exist in the slice, but it doesn't.")
+	}
+
+	exists = Exists(people, func(person person) bool {
+		return person.Name == "David"
+	})
+	if exists {
+		t.Error("Expected David not to exist in the slice, but it does.")
+	}
+}

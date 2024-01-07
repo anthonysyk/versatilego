@@ -40,3 +40,24 @@ func Reduce[T any, R any](data []T, reducer ReduceFunc[T, R], initial R) R {
 	}
 	return result
 }
+
+type PredicateFunc[T any] func(T) bool
+
+func Find[T any](data []T, findFunc PredicateFunc[T]) (T, bool) {
+	for _, e := range data {
+		if findFunc(e) {
+			return e, true
+		}
+	}
+	var empty T
+	return empty, false
+}
+
+func Exists[T any](data []T, existsFunc PredicateFunc[T]) bool {
+	for _, e := range data {
+		if existsFunc(e) {
+			return true
+		}
+	}
+	return false
+}
