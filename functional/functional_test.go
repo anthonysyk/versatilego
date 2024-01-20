@@ -6,6 +6,8 @@ import (
 )
 
 func TestIdentity(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name  string
 		input int
@@ -18,6 +20,8 @@ func TestIdentity(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			if got := Identity(tt.input); got != tt.want {
 				t.Errorf("Identity() = %v, want %v", got, tt.want)
 			}
@@ -26,6 +30,8 @@ func TestIdentity(t *testing.T) {
 }
 
 func TestMap(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name   string
 		input  []int
@@ -48,6 +54,8 @@ func TestMap(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			if got := Map(tt.input, tt.getter); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Map() = %v, want %v", got, tt.want)
 			}
@@ -56,6 +64,8 @@ func TestMap(t *testing.T) {
 }
 
 func TestReduce(t *testing.T) {
+	t.Parallel()
+
 	sumFunc := func(acc, val int) int {
 		return acc + val
 	}
@@ -74,6 +84,8 @@ func TestReduce(t *testing.T) {
 }
 
 func TestFilter(t *testing.T) {
+	t.Parallel()
+
 	evenFunc := func(val int) bool {
 		return val%2 == 0
 	}
@@ -99,6 +111,8 @@ type person struct {
 }
 
 func TestFind(t *testing.T) {
+	t.Parallel()
+
 	people := []person{
 		{Name: "Alice", Age: 25},
 		{Name: "Bob", Age: 30},
@@ -121,6 +135,8 @@ func TestFind(t *testing.T) {
 }
 
 func TestExists(t *testing.T) {
+	t.Parallel()
+
 	people := []person{
 		{Name: "Alice", Age: 25},
 		{Name: "Bob", Age: 30},

@@ -1,10 +1,13 @@
 package slice
 
 import (
+	"reflect"
 	"testing"
 )
 
 func TestSliceContains(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		slice    []int
 		value    int
@@ -23,6 +26,8 @@ func TestSliceContains(t *testing.T) {
 }
 
 func TestSliceContainsAtLeastOne(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		sliceA []string
 		sliceB []string
@@ -41,6 +46,8 @@ func TestSliceContainsAtLeastOne(t *testing.T) {
 }
 
 func TestSliceRemove(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		slice    []int
 		value    int
@@ -59,6 +66,8 @@ func TestSliceRemove(t *testing.T) {
 }
 
 func TestSliceIndexOf(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		slice    []int
 		value    int
@@ -77,6 +86,8 @@ func TestSliceIndexOf(t *testing.T) {
 }
 
 func TestSliceIntersection(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		sliceA []string
 		sliceB []string
@@ -94,6 +105,8 @@ func TestSliceIntersection(t *testing.T) {
 }
 
 func TestSliceUnion(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		sliceA []int
 		sliceB []int
@@ -111,6 +124,8 @@ func TestSliceUnion(t *testing.T) {
 }
 
 func TestStrictEqual(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		sliceA []int
 		sliceB []int
@@ -129,6 +144,8 @@ func TestStrictEqual(t *testing.T) {
 }
 
 func TestContainSameElements(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		sliceA []int
 		sliceB []int
@@ -143,5 +160,60 @@ func TestContainSameElements(t *testing.T) {
 		if containsSameElements != tt.result {
 			t.Errorf("expected %v but got %v", tt.result, containsSameElements)
 		}
+	}
+}
+
+func TestTakeIntSlice(t *testing.T) {
+	t.Parallel()
+
+	intSlice := []int{1, 2, 3, 4, 5}
+	n := 3
+	result := Take(intSlice, n)
+
+	expected := []int{1, 2, 3}
+
+	if !reflect.DeepEqual(result, expected) {
+		t.Errorf("Take() = %v, want %v", result, expected)
+	}
+}
+
+func TestTake_StringSlice(t *testing.T) {
+	t.Parallel()
+	strSlice := []string{"a", "b", "c", "d", "e"}
+	n := 2
+	result := Take(strSlice, n)
+
+	expected := []string{"a", "b"}
+
+	if !reflect.DeepEqual(result, expected) {
+		t.Errorf("Take() = %v, want %v", result, expected)
+	}
+}
+
+func TestTake_EmptySlice(t *testing.T) {
+	t.Parallel()
+
+	emptySlice := []int{}
+	n := 2
+	result := Take(emptySlice, n)
+
+	expected := []int{}
+
+	if !reflect.DeepEqual(result, expected) {
+		t.Errorf("Take() = %v, want %v", result, expected)
+	}
+}
+
+func TestTake_NegativeN(t *testing.T) {
+	t.Parallel()
+
+	intSlice := []int{1, 2, 3, 4, 5}
+	n := -2
+	result := Take(intSlice, n)
+
+	expected := []int{1, 2, 3, 4, 5}
+
+	if !reflect.DeepEqual(result, expected) {
+		t.Errorf("Take() = %v, want %v", result, expected)
 	}
 }

@@ -6,6 +6,8 @@ import (
 )
 
 func TestBatchProcess(t *testing.T) {
+	t.Parallel()
+
 	type PlayerHistoryScore struct {
 		Player string
 		Score  int
@@ -40,6 +42,7 @@ func TestBatchProcess(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.label, func(t *testing.T) {
+			t.Parallel()
 			scores := Process(test.players, test.batchSize, GetPlayerHistoryScore)
 			assert.Equal(t, test.expectedIterations, iterations)
 			assert.Equal(t, test.expectedResult, scores)
