@@ -15,6 +15,17 @@ func Map[T any, F any](data []T, getter MapFunc[T, F]) []F {
 	return res
 }
 
+type FlatMapFunc[T, R any] func(T) []R
+
+// FlatMap applies a flatmap function to a slice.
+func FlatMap[T any, F any](data []T, getter FlatMapFunc[T, F]) []F {
+	var res []F
+	for _, e := range data {
+		res = append(res, getter(e)...)
+	}
+	return res
+}
+
 // FilterFunc pe of the filter function.
 type FilterFunc[T any] func(T) bool
 

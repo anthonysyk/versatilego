@@ -1,7 +1,7 @@
 package functional
 
 import (
-	"reflect"
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
@@ -22,9 +22,9 @@ func TestIdentity(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			if got := Identity(tt.input); got != tt.want {
-				t.Errorf("Identity() = %v, want %v", got, tt.want)
-			}
+			got := Identity(tt.input)
+			assert.Equal(t, tt.want, got)
+
 		})
 	}
 }
@@ -56,9 +56,8 @@ func TestMap(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			if got := Map(tt.input, tt.getter); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Map() = %v, want %v", got, tt.want)
-			}
+			got := Map(tt.input, tt.getter)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -91,18 +90,14 @@ func TestFilter(t *testing.T) {
 	}
 	evens := Filter([]int{1, 2, 3, 4, 5, 6}, evenFunc)
 	wantEvens := []int{2, 4, 6}
-	if !reflect.DeepEqual(evens, wantEvens) {
-		t.Errorf("Filter() for even numbers returned %v, want %v", evens, wantEvens)
-	}
+	assert.Equal(t, wantEvens, evens)
 
 	nonEmptyFunc := func(val string) bool {
 		return val != ""
 	}
 	nonEmpty := Filter([]string{"hello", "", "world"}, nonEmptyFunc)
 	wantNonEmpty := []string{"hello", "world"}
-	if !reflect.DeepEqual(nonEmpty, wantNonEmpty) {
-		t.Errorf("Filter() for non-empty strings returned %v, want %v", nonEmpty, wantNonEmpty)
-	}
+	assert.Equal(t, wantNonEmpty, nonEmpty)
 }
 
 type person struct {
@@ -122,16 +117,14 @@ func TestFind(t *testing.T) {
 	result, found := Find(people, func(person person) bool {
 		return person.Name == "Charlie"
 	})
-	if !found || result.Name != "Charlie" {
-		t.Error("Expected to find Charlie in the slice, but it wasn't found.")
-	}
+	assert.Equal(t, person{Name: "Charlie", Age: 22}, result)
+	assert.Equal(t, true, found)
 
 	result, found = Find(people, func(person person) bool {
 		return person.Name == "David"
 	})
-	if found {
-		t.Error("Expected not to find David in the slice, but it was found.")
-	}
+	assert.Equal(t, person{}, result)
+	assert.Equal(t, false, found)
 }
 
 func TestExists(t *testing.T) {
@@ -146,14 +139,26 @@ func TestExists(t *testing.T) {
 	exists := Exists(people, func(person person) bool {
 		return person.Name == "Bob"
 	})
-	if !exists {
-		t.Error("Expected Bob to exist in the slice, but it doesn't.")
-	}
+	assert.Equal(t, true, exists)
 
 	exists = Exists(people, func(person person) bool {
 		return person.Name == "David"
 	})
-	if exists {
-		t.Error("Expected David not to exist in the slice, but it does.")
+	assert.Equal(t, false, exists)
+}
+
+func TestFlatMap(t *testing.T) {
+	t.Parallel()
+
+	baskets := [][]string{
+		{"Apple", "Banana"},
+		{"Orange", "Pineapple"},
+		{"Kiwi"},
 	}
+
+	names := FlatMap(baskets, func(fruits []string) []string {
+		return fruits
+	})
+
+	assert.Equal(t, []string{"Apple", "Banana", "Orange", "Pineapple", "Kiwi"}, names)
 }
