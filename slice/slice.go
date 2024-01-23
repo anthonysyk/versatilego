@@ -107,8 +107,11 @@ func ContainSameElements[T comparable](a, b []T) bool {
 
 // Take returns the first n elements of a slice
 func Take[T any](slice []T, n int) []T {
-	if n <= 0 || n >= len(slice) {
+	if n >= len(slice) {
 		return slice[:len(slice)]
+	}
+	if n <= 0 {
+		return []T{}
 	}
 	return slice[:n]
 }

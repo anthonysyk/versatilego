@@ -1,7 +1,7 @@
 package slice
 
 import (
-	"reflect"
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
@@ -163,57 +163,63 @@ func TestContainSameElements(t *testing.T) {
 	}
 }
 
-func TestTakeIntSlice(t *testing.T) {
+// TODO: write all tests like this
+func TestTake(t *testing.T) {
 	t.Parallel()
 
-	intSlice := []int{1, 2, 3, 4, 5}
-	n := 3
-	result := Take(intSlice, n)
-
-	expected := []int{1, 2, 3}
-
-	if !reflect.DeepEqual(result, expected) {
-		t.Errorf("Take() = %v, want %v", result, expected)
-	}
-}
-
-func TestTake_StringSlice(t *testing.T) {
-	t.Parallel()
-	strSlice := []string{"a", "b", "c", "d", "e"}
-	n := 2
-	result := Take(strSlice, n)
-
-	expected := []string{"a", "b"}
-
-	if !reflect.DeepEqual(result, expected) {
-		t.Errorf("Take() = %v, want %v", result, expected)
-	}
-}
-
-func TestTake_EmptySlice(t *testing.T) {
-	t.Parallel()
-
-	emptySlice := []int{}
-	n := 2
-	result := Take(emptySlice, n)
-
-	expected := []int{}
-
-	if !reflect.DeepEqual(result, expected) {
-		t.Errorf("Take() = %v, want %v", result, expected)
-	}
-}
-
-func TestTake_NegativeN(t *testing.T) {
-	t.Parallel()
-
-	intSlice := []int{1, 2, 3, 4, 5}
-	n := -2
-	result := Take(intSlice, n)
-
-	expected := []int{1, 2, 3, 4, 5}
-
-	if !reflect.DeepEqual(result, expected) {
-		t.Errorf("Take() = %v, want %v", result, expected)
+	for _, c := range []struct {
+		name            string
+		size            int
+		input, expected []string
+	}{
+		{
+			name:     "nominal",
+			size:     2,
+			input:    []string{"A", "BA", "C", ""},
+			expected: []string{"A", "BA"},
+		},
+		{
+			name:     "max length",
+			size:     4,
+			input:    []string{"A", "BA", "C", ""},
+			expected: []string{"A", "BA", "C", ""},
+		},
+		{
+			name:     "over max length",
+			size:     8,
+			input:    []string{"A", "BA", "C", ""},
+			expected: []string{"A", "BA", "C", ""},
+		},
+		{
+			name:     "size zero",
+			size:     0,
+			input:    []string{"A", "BA", "C", ""},
+			expected: []string{},
+		},
+		{
+			name:     "negative size",
+			size:     -3,
+			input:    []string{"A", "BA", "C", ""},
+			expected: []string{},
+		},
+		{
+			name:     "nil slice",
+			size:     3,
+			input:    nil,
+			expected: nil,
+		},
+		{
+			name:     "empty slice",
+			size:     3,
+			input:    []string{},
+			expected: []string{},
+		},
+	} {
+		c := c
+		t.Run(c.name, func(t *testing.T) {
+			t.Parallel()
+			actual := Take(c.input, c.size)
+			assert.Equal(t, c.expected, actual)
+		})
 	}
 }
