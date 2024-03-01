@@ -1,5 +1,13 @@
 package functional
 
+func Zero[X any]() (res X) {
+	return
+}
+
+func IsZero[X comparable](x X) bool {
+	return x == Zero[X]()
+}
+
 func Identity[T any](x T) T {
 	return x
 }

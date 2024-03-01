@@ -5,26 +5,41 @@ import (
 	"testing"
 )
 
+func TestIsZero(t *testing.T) {
+	t.Parallel()
+
+	assert.Equal(t, true, IsZero(0))
+	assert.Equal(t, false, IsZero(5))
+
+	assert.Equal(t, true, IsZero(0.0))
+	assert.Equal(t, false, IsZero(5.0))
+
+	assert.Equal(t, true, IsZero(""))
+	assert.Equal(t, false, IsZero("not empty"))
+
+	assert.Equal(t, true, IsZero(false))
+	assert.Equal(t, false, IsZero(true))
+}
+
 func TestIdentity(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
-		name  string
+		label string
 		input int
 		want  int
 	}{
-		{"IdentityPositiveInt", 5, 5},
-		{"IdentityZero", 0, 0},
-		{"IdentityNegativeInt", -3, -3},
+		{"identity zero", 0, 0},
+		{"identity positive int", 5, 5},
+		{"identity negative int", -3, -3},
 	}
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+	for _, c := range tests {
+		c := c
+		t.Run(c.label, func(t *testing.T) {
 			t.Parallel()
-
-			got := Identity(tt.input)
-			assert.Equal(t, tt.want, got)
-
+			got := Identity(c.input)
+			assert.Equal(t, c.want, got)
 		})
 	}
 }
@@ -33,31 +48,32 @@ func TestMap(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
-		name   string
+		label  string
 		input  []int
 		getter MapFunc[int, int]
 		want   []int
 	}{
 		{
-			name:   "SquareIntegers",
+			label:  "SquareIntegers",
 			input:  []int{1, 2, 3, 4},
 			getter: func(x int) int { return x * x },
 			want:   []int{1, 4, 9, 16},
 		},
 		{
-			name:   "IdentityIntegers",
+			label:  "IdentityIntegers",
 			input:  []int{1, 2, 3, 4},
 			getter: Identity[int],
 			want:   []int{1, 2, 3, 4},
 		},
 	}
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+	for _, c := range tests {
+		c := c
+		t.Run(c.label, func(t *testing.T) {
 			t.Parallel()
 
-			got := Map(tt.input, tt.getter)
-			assert.Equal(t, tt.want, got)
+			got := Map(c.input, c.getter)
+			assert.Equal(t, c.want, got)
 		})
 	}
 }
