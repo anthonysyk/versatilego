@@ -9,6 +9,7 @@ This library aims to provide developers with a robust set of reusable, reliable,
 - Batch: Apply a function on a slice in batch. (generics)
 - Functional: Classic functional programming (generics)
 - Slice: Classic slice manipulation (generics)
+- Sort: Classic sort functions (generics) (in progress)
 
 ## Installation
 To use this library in your Go project, simply add it to your dependencies:
@@ -20,7 +21,7 @@ go get -u github.com/anthonysyk/versatilego
 Then, import it in your Go files:
 
 ```go
-import github.com/anthonysyk/versatilego/functional
+import "github.com/anthonysyk/versatilego/functional"
 ```
 
 ## License

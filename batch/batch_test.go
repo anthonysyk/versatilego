@@ -40,12 +40,13 @@ func TestBatchProcess(t *testing.T) {
 		},
 	}
 
-	for _, test := range tests {
-		t.Run(test.label, func(t *testing.T) {
+	for _, c := range tests {
+		c := c
+		t.Run(c.label, func(t *testing.T) {
 			t.Parallel()
-			scores := Process(test.players, test.batchSize, GetPlayerHistoryScore)
-			assert.Equal(t, test.expectedIterations, iterations)
-			assert.Equal(t, test.expectedResult, scores)
+			scores := Process(c.players, c.batchSize, GetPlayerHistoryScore)
+			assert.Equal(t, c.expectedIterations, iterations)
+			assert.Equal(t, c.expectedResult, scores)
 			iterations = 0
 		})
 	}
